@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Service: Vacation & Attendance</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 text-gray-800">
+
+  <!-- Header -->
+  <header class="bg-indigo-700 text-white p-4 shadow-lg">
+    <h1 class="text-2xl font-bold">Service: Vacation & Attendance</h1>
+  </header>
+
+  <!-- Tabs -->
+  <main class="container mx-auto px-6 py-6">
+    <div class="flex border-b border-gray-300 mb-6">
+      <button onclick="showTab('overview')" id="btn-overview" class="px-4 py-2 font-semibold text-indigo-700 border-b-2 border-indigo-700">Overview</button>
+      <button onclick="showTab('developer')" id="btn-developer" class="px-4 py-2 font-semibold text-gray-500 hover:text-indigo-700">Developer</button>
+    </div>
+
+    <!-- Overview Tab -->
+    <section id="overview" class="space-y-6">
+      <h2 class="text-xl font-bold text-indigo-700">📘 Overview</h2>
+      <p>
+        The Vacation & Attendance service tracks daily check-in/out, manages shifts,
+        and handles vacation/leave approvals for employees.
+      </p>
+
+      <div>
+        <h3 class="font-semibold text-lg mb-2">Project Structure</h3>
+        <pre class="bg-gray-900 text-green-300 p-4 rounded">
+service-vacation-attendance/
+ ├── api/
+ ├── ui/
+ ├── db-schema/
+ ├── integrations/
+ └── docs/
+        </pre>
+      </div>
+
+      <div>
+        <h3 class="font-semibold text-lg mb-2">Workflow</h3>
+        <ol class="list-decimal ml-6 space-y-1">
+          <li>Employee checks in/out using ERPNext portal or device</li>
+          <li>System records attendance logs into DB</li>
+          <li>Employee applies for vacation/leave</li>
+          <li>HR/Manager reviews and approves/rejects leave</li>
+          <li>Attendance & leave integrated with Payroll & Project modules</li>
+        </ol>
+      </div>
+
+      <div>
+        <h3 class="font-semibold text-lg mb-2">Architecture Flow</h3>
+        <pre class="bg-gray-900 text-green-300 p-4 rounded">
+Biometric/Portal ──▶ Attendance API ──▶ Attendance DB
+       Employee ──▶ Leave API ──▶ Leave DB
+                          │
+                          ▼
+             Payroll & Project Integration
+        </pre>
+      </div>
+
+      <div>
+        <h3 class="font-semibold text-lg mb-2">Service Modules</h3>
+        <ul class="list-disc ml-6">
+          <li>Attendance Tracking (check-in/out, shifts)</li>
+          <li>Leave Application & Approval flow</li>
+          <li>Biometric Device Integration (optional)</li>
+          <li>Integration with HR, Payroll, Project modules</li>
+          <li>Reporting & Analytics</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- Developer Tab -->
+    <section id="developer" class="hidden">
+      <h2 class="text-xl font-bold text-indigo-700 mb-4">🛠️ Developer Tasks</h2>
+
+      <div class="bg-gray-200 w-full rounded-full h-6 mb-4">
+        <div id="progressBar" class="bg-indigo-600 h-6 rounded-full" style="width:0%"></div>
+      </div>
+      <p id="progressText" class="text-sm mb-6">0% Completed</p>
+
+      <div id="taskList" class="space-y-4"></div>
+    </section>
+  </main>
+
+  <script>
+    const tasks = [
+      {
+        id: 1, text: "Setup ERPNext HR Module",
+        subtasks: [
+          { id: "1.1", text: "Install ERPNext HR app", done: false },
+          { id: "1.2", text: "Configure Attendance & Leave doctypes", done: false },
+          { id: "1.3", text: "Setup employee master records", done: false },
+          { id: "1.4", text: "Create user roles & permissions", done: false }
+        ]
+      },
+      {
+        id: 2, text: "Design DB Schema",
+        subtasks: [
+          { id: "2.1", text: "Attendance table (employee, date, status)", done: false },
+          { id: "2.2", text: "Leave application table (apply, approve, reject)", done: false },
+          { id: "2.3", text: "Shift & roster table", done: false },
+          { id: "2.4", text: "Audit log table for HR actions", done: false }
+        ]
+      },
+      {
+        id: 3, text: "Develop APIs",
+        subtasks: [
+          { id: "3.1", text: "Attendance API (check-in/out)", done: false },
+          { id: "3.2", text: "Leave API (apply, cancel)", done: false },
+          { id: "3.3", text: "Approval API (approve/reject)", done: false },
+          { id: "3.4", text: "Reporting API (monthly attendance)", done: false }
+        ]
+      },
+      {
+        id: 4, text: "Integration & Testing",
+        subtasks: [
+          { id: "4.1", text: "Integrate Biometric device", done: false },
+          { id: "4.2", text: "Integrate with Payroll module", done: false },
+          { id: "4.3", text: "Integrate with Project module", done: false },
+          { id: "4.4", text: "Write unit & integration tests", done: false }
+        ]
+      },
+      {
+        id: 5, text: "Deployment & Documentation",
+        subtasks: [
+          { id: "5.1", text: "Prepare Docker/K8s deployment", done: false },
+          { id: "5.2", text: "Write API documentation", done: false },
+          { id: "5.3", text: "Conduct HR training session", done: false },
+          { id: "5.4", text: "Finalize service handover", done: false }
+        ]
+      }
+    ];
+
+    function renderTasks() {
+      const container = document.getElementById("taskList");
+      container.innerHTML = "";
+      let total = 0, completed = 0;
+
+      tasks.forEach((task, ti) => {
+        const wrapper = document.createElement("div");
+        wrapper.className = "bg-white rounded shadow";
+
+        const header = document.createElement("button");
+        header.className = "w-full text-left p-3 font-semibold bg-gray-100";
+        header.innerText = task.text;
+        header.onclick = () => body.classList.toggle("hidden");
+
+        const body = document.createElement("div");
+        body.className = ti === 0 ? "p-3" : "p-3 hidden";
+
+        task.subtasks.forEach((sub, si) => {
+          total++;
+          if (sub.done) completed++;
+
+          const disabled = (si > 0 && !task.subtasks[si - 1].done) ||
+                           (ti > 0 && !tasks[ti - 1].subtasks.every(s => s.done));
+
+          const div = document.createElement("div");
+          div.className = "flex items-center space-x-3 mb-2";
+          div.innerHTML = `
+            <input type="checkbox" ${sub.done ? "checked" : ""} ${disabled ? "disabled" : ""}
+              onchange="toggleSubtask(${task.id}, '${sub.id}')">
+            <span class="${sub.done ? "line-through text-gray-400" : ""}">${sub.text}</span>
+          `;
+          body.appendChild(div);
+        });
+
+        wrapper.appendChild(header);
+        wrapper.appendChild(body);
+        container.appendChild(wrapper);
+      });
+
+      const percent = Math.round((completed / total) * 100);
+      document.getElementById("progressBar").style.width = percent + "%";
+      document.getElementById("progressText").innerText = percent + "% Completed";
+    }
+
+    function toggleSubtask(tid, sid) {
+      const task = tasks.find(t => t.id === tid);
+      const sub = task.subtasks.find(s => s.id === sid);
+      sub.done = !sub.done;
+      renderTasks();
+    }
+
+    function showTab(tab) {
+      document.getElementById("overview").classList.add("hidden");
+      document.getElementById("developer").classList.add("hidden");
+      document.getElementById(tab).classList.remove("hidden");
+
+      document.getElementById("btn-overview").classList.remove("text-indigo-700","border-indigo-700","border-b-2");
+      document.getElementById("btn-overview").classList.add("text-gray-500");
+
+      document.getElementById("btn-developer").classList.remove("text-indigo-700","border-indigo-700","border-b-2");
+      document.getElementById("btn-developer").classList.add("text-gray-500");
+
+      document.getElementById("btn-"+tab).classList.remove("text-gray-500");
+      document.getElementById("btn-"+tab).classList.add("text-indigo-700","border-indigo-700","border-b-2");
+    }
+
+    window.onload = renderTasks;
+  </script>
+</body>
+</html>

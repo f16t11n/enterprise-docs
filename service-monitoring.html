@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Service: Employee Monitoring</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 text-gray-800">
+
+  <!-- Header -->
+  <header class="bg-blue-700 text-white p-4 shadow-lg">
+    <h1 class="text-2xl font-bold">Service: Employee Monitoring</h1>
+  </header>
+
+  <!-- Tabs -->
+  <main class="container mx-auto px-6 py-6">
+    <div class="flex border-b border-gray-300 mb-6">
+      <button onclick="showTab('overview')" id="btn-overview" class="px-4 py-2 font-semibold text-blue-700 border-b-2 border-blue-700">Overview</button>
+      <button onclick="showTab('developer')" id="btn-developer" class="px-4 py-2 font-semibold text-gray-500 hover:text-blue-700">Developer</button>
+    </div>
+
+    <!-- Overview Tab -->
+    <section id="overview" class="space-y-6">
+      <h2 class="text-xl font-bold text-blue-700">📘 Overview</h2>
+      <p>This service monitors employee activity on company-provided Laptop & Android devices.</p>
+
+      <div>
+        <h3 class="font-semibold text-lg mb-2">Project Structure</h3>
+        <pre class="bg-gray-900 text-green-300 p-4 rounded">
+service-monitoring/
+ ├── client-laptop/
+ ├── client-android/
+ ├── monitoring-api/
+ ├── db-schema/
+ └── docs/
+        </pre>
+      </div>
+
+      <div>
+        <h3 class="font-semibold text-lg mb-2">Workflow</h3>
+        <ol class="list-decimal ml-6 space-y-1">
+          <li>Data collection from Laptop & Android</li>
+          <li>Secure transmission to Monitoring API</li>
+          <li>Logs stored in TimescaleDB</li>
+          <li>Aggregation & reporting jobs</li>
+          <li>Data exposed to Unified Dashboard</li>
+        </ol>
+      </div>
+
+      <div>
+        <h3 class="font-semibold text-lg mb-2">Architecture Flow</h3>
+        <pre class="bg-gray-900 text-green-300 p-4 rounded">
+Laptop Agent ──▶ Monitoring API ──▶ TimescaleDB
+Android Agent ──▶ Monitoring API ──▶ TimescaleDB
+                           │
+                           ▼
+                  Unified Dashboard API
+        </pre>
+      </div>
+
+      <div>
+        <h3 class="font-semibold text-lg mb-2">Service Modules</h3>
+        <ul class="list-disc ml-6">
+          <li>Laptop Agent (ActivityWatch fork)</li>
+          <li>Android Agent (Custom app)</li>
+          <li>Monitoring API (FastAPI/Node.js)</li>
+          <li>Database Schema (TimescaleDB)</li>
+          <li>Processing Layer (Aggregation jobs)</li>
+          <li>Integration with Unified Dashboard</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- Developer Tab -->
+    <section id="developer" class="hidden">
+      <h2 class="text-xl font-bold text-blue-700 mb-4">🛠️ Developer Tasks</h2>
+
+      <div class="bg-gray-200 w-full rounded-full h-6 mb-4">
+        <div id="progressBar" class="bg-blue-600 h-6 rounded-full" style="width:0%"></div>
+      </div>
+      <p id="progressText" class="text-sm mb-6">0% Completed</p>
+
+      <div id="taskList" class="space-y-2"></div>
+    </section>
+  </main>
+
+  <script>
+    const defaultTasks = [
+      {
+        id: 1, text: "Setup Project",
+        subtasks: [
+          { id: "1.1", text: "Create repository", done: false },
+          { id: "1.2", text: "Setup Docker/K8s env", done: false },
+          { id: "1.3", text: "Configure CI/CD pipeline", done: false }
+        ]
+      },
+      {
+        id: 2, text: "Laptop Agent",
+        subtasks: [
+          { id: "2.1", text: "Fork ActivityWatch", done: false },
+          { id: "2.2", text: "Implement browser tracking", done: false },
+          { id: "2.3", text: "Implement app usage tracking", done: false }
+        ]
+      },
+      {
+        id: 3, text: "Android Agent",
+        subtasks: [
+          { id: "3.1", text: "Setup Android project", done: false },
+          { id: "3.2", text: "Integrate UsageStats API", done: false },
+          { id: "3.3", text: "Implement background service", done: false }
+        ]
+      },
+      {
+        id: 4, text: "Monitoring API",
+        subtasks: [
+          { id: "4.1", text: "Setup FastAPI/Node.js project", done: false },
+          { id: "4.2", text: "Implement secure endpoints", done: false },
+          { id: "4.3", text: "JWT authentication", done: false }
+        ]
+      },
+      {
+        id: 5, text: "Database Schema",
+        subtasks: [
+          { id: "5.1", text: "Design TimescaleDB schema", done: false },
+          { id: "5.2", text: "Setup migrations", done: false },
+          { id: "5.3", text: "Optimize for time-series", done: false }
+        ]
+      },
+      {
+        id: 6, text: "Aggregation Jobs",
+        subtasks: [
+          { id: "6.1", text: "Daily summaries", done: false },
+          { id: "6.2", text: "Weekly productivity report", done: false },
+          { id: "6.3", text: "Alerts for anomalies", done: false }
+        ]
+      },
+      {
+        id: 7, text: "Integration",
+        subtasks: [
+          { id: "7.1", text: "Connect API with dashboard", done: false },
+          { id: "7.2", text: "Test role-based data access", done: false },
+          { id: "7.3", text: "Optimize API responses", done: false }
+        ]
+      },
+      {
+        id: 8, text: "Testing & QA",
+        subtasks: [
+          { id: "8.1", text: "Unit testing", done: false },
+          { id: "8.2", text: "Integration testing", done: false },
+          { id: "8.3", text: "Load testing", done: false }
+        ]
+      },
+      {
+        id: 9, text: "Deployment",
+        subtasks: [
+          { id: "9.1", text: "Build Docker images", done: false },
+          { id: "9.2", text: "Deploy to server", done: false },
+          { id: "9.3", text: "Configure monitoring/alerts", done: false }
+        ]
+      },
+      {
+        id: 10, text: "Documentation & Handover",
+        subtasks: [
+          { id: "10.1", text: "Write API documentation", done: false },
+          { id: "10.2", text: "Create user guides", done: false },
+          { id: "10.3", text: "Conduct handover training", done: false }
+        ]
+      }
+    ];
+
+    let tasks = JSON.parse(localStorage.getItem("monitoringTasks")) || defaultTasks;
+
+    function renderTasks() {
+      const container = document.getElementById("taskList");
+      container.innerHTML = "";
+      let total = 0, completed = 0;
+
+      tasks.forEach((task, ti) => {
+        const wrapper = document.createElement("div");
+        wrapper.className = "bg-white rounded shadow";
+
+        // Task Header
+        const header = document.createElement("button");
+        header.className = "w-full text-left p-3 font-semibold bg-gray-100";
+        header.innerText = task.text;
+        header.onclick = () => body.classList.toggle("hidden");
+
+        // Subtask Body
+        const body = document.createElement("div");
+        body.className = ti === 0 ? "p-3" : "p-3 hidden";
+
+        task.subtasks.forEach((sub, si) => {
+          total++;
+          if (sub.done) completed++;
+
+          const disabled = (si > 0 && !task.subtasks[si - 1].done) ||
+                           (ti > 0 && !tasks[ti - 1].subtasks.every(s => s.done));
+
+          const div = document.createElement("div");
+          div.className = "flex items-center space-x-3 mb-2";
+          div.innerHTML = `
+            <input type="checkbox" ${sub.done ? "checked" : ""} ${disabled ? "disabled" : ""}
+              onchange="toggleSubtask(${task.id}, '${sub.id}')">
+            <span class="${sub.done ? "line-through text-gray-400" : ""}">${sub.text}</span>
+          `;
+          body.appendChild(div);
+        });
+
+        wrapper.appendChild(header);
+        wrapper.appendChild(body);
+        container.appendChild(wrapper);
+      });
+
+      const percent = Math.round((completed / total) * 100);
+      document.getElementById("progressBar").style.width = percent + "%";
+      document.getElementById("progressText").innerText = percent + "% Completed";
+    }
+
+    function toggleSubtask(tid, sid) {
+      const task = tasks.find(t => t.id === tid);
+      const sub = task.subtasks.find(s => s.id === sid);
+      sub.done = !sub.done;
+      localStorage.setItem("monitoringTasks", JSON.stringify(tasks));
+      renderTasks();
+    }
+
+    function showTab(tab) {
+      document.getElementById("overview").classList.add("hidden");
+      document.getElementById("developer").classList.add("hidden");
+      document.getElementById(tab).classList.remove("hidden");
+
+      document.getElementById("btn-overview").classList.remove("text-blue-700","border-blue-700","border-b-2");
+      document.getElementById("btn-overview").classList.add("text-gray-500");
+
+      document.getElementById("btn-developer").classList.remove("text-blue-700","border-blue-700","border-b-2");
+      document.getElementById("btn-developer").classList.add("text-gray-500");
+
+      document.getElementById("btn-"+tab).classList.remove("text-gray-500");
+      document.getElementById("btn-"+tab).classList.add("text-blue-700","border-blue-700","border-b-2");
+    }
+
+    window.onload = renderTasks;
+  </script>
+</body>
+</html>

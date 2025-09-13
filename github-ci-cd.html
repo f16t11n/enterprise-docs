@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Service: GitHub Setup + Linting + CI/CD + Code Review</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    // --- Default tasks & subtasks ---
+    const defaultTasks = [
+      {
+        id: 1,
+        text: "GitHub Setup",
+        subtasks: [
+          { id: "1.1", text: "Create GitHub repo & initialize README", done: false },
+          { id: "1.2", text: "Add .gitignore, LICENSE", done: false },
+          { id: "1.3", text: "Protect main branch (require PR + CI)", done: false },
+          { id: "1.4", text: "Add CODEOWNERS file", done: false }
+        ]
+      },
+      {
+        id: 2,
+        text: "Linting & Code Quality",
+        subtasks: [
+          { id: "2.1", text: "Setup ESLint + Prettier (JS/TS)", done: false },
+          { id: "2.2", text: "Setup Pylint + Black (Python)", done: false },
+          { id: "2.3", text: "Setup PHP_CodeSniffer (PHP)", done: false },
+          { id: "2.4", text: "Setup Checkstyle (Java) / golangci-lint (Go)", done: false },
+          { id: "2.5", text: "Setup jscpd (duplicate code detection)", done: false }
+        ]
+      },
+      {
+        id: 3,
+        text: "CI/CD Pipeline",
+        subtasks: [
+          { id: "3.1", text: "Create .github/workflows/ci.yml", done: false },
+          { id: "3.2", text: "Checkout repository (actions/checkout)", done: false },
+          { id: "3.3", text: "Setup runtime (Node.js / Python / Java / Go)", done: false },
+          { id: "3.4", text: "Install dependencies", done: false },
+          { id: "3.5", text: "Run Linter (npm run lint / pylint)", done: false },
+          { id: "3.6", text: "Run Unit Tests", done: false },
+          { id: "3.7", text: "Run Integration Tests", done: false },
+          { id: "3.8", text: "Build project (npm build / maven package)", done: false },
+          { id: "3.9", text: "Run CodeQL security analysis", done: false },
+          { id: "3.10", text: "Upload coverage report (Codecov/SonarQube)", done: false },
+          { id: "3.11", text: "Docker build & push (if applicable)", done: false },
+          { id: "3.12", text: "Deploy to staging environment", done: false },
+          { id: "3.13", text: "Smoke tests on staging", done: false },
+          { id: "3.14", text: "Deploy to production (manual approval)", done: false }
+        ]
+      },
+      {
+        id: 4,
+        text: "Code Review & Testing",
+        subtasks: [
+          { id: "4.1", text: "Setup PR checklist (title, description, linked issue)", done: false },
+          { id: "4.2", text: "Require at least 1 reviewer approval", done: false },
+          { id: "4.3", text: "Verify no unused imports or variables", done: false },
+          { id: "4.4", text: "Verify no duplicate or boilerplate code", done: false },
+          { id: "4.5", text: "Verify linter & formatter pass (ESLint, Prettier, etc.)", done: false },
+          { id: "4.6", text: "Run full unit + integration tests (coverage ≥ 80%)", done: false },
+          { id: "4.7", text: "Check security (no secrets, no unsafe functions, deps audit)", done: false },
+          { id: "4.8", text: "Validate function size & OOP (SRP, SOLID, meaningful names)", done: false },
+          { id: "4.9", text: "Update docs (README, API, ADR if needed)", done: false },
+          { id: "4.10", text: "Verify CI/CD pipeline success before merge", done: false }
+        ]
+      },
+      {
+        id: 5,
+        text: "OOP & Standards",
+        subtasks: [
+          { id: "5.1", text: "Follow SOLID principles", done: false },
+          { id: "5.2", text: "Use design patterns where needed", done: false },
+          { id: "5.3", text: "Ensure class methods follow single responsibility", done: false },
+          { id: "5.4", text: "Meaningful variable & function names", done: false },
+          { id: "5.5", text: "Maintain 80%+ test coverage", done: false }
+        ]
+      },
+      {
+        id: 6,
+        text: "Reporting & Dashboard",
+        subtasks: [
+          { id: "6.1", text: "Integrate SonarQube / CodeClimate", done: false },
+          { id: "6.2", text: "Collect code smells & vulnerabilities", done: false },
+          { id: "6.3", text: "Expose metrics to Unified Dashboard API", done: false }
+        ]
+      }
+    ];
+
+    let tasks = JSON.parse(localStorage.getItem("githubCiCdTasks")) || defaultTasks;
+
+    function saveTasks() {
+      localStorage.setItem("githubCiCdTasks", JSON.stringify(tasks));
+    }
+
+    function toggleSubtask(taskId, subId) {
+      const task = tasks.find(t => t.id === taskId);
+      const sub = task.subtasks.find(s => s.id === subId);
+      sub.done = !sub.done;
+      saveTasks();
+      renderTasks();
+    }
+
+    function renderTasks() {
+      const container = document.getElementById("taskList");
+      container.innerHTML = "";
+      let total = 0, completed = 0;
+
+      tasks.forEach((task, ti) => {
+        const wrapper = document.createElement("div");
+        wrapper.className = "bg-white rounded shadow mb-4";
+
+        const header = document.createElement("button");
+        header.className = "w-full text-left p-3 font-semibold bg-gray-100";
+        header.innerText = task.text;
+        header.onclick = () => body.classList.toggle("hidden");
+
+        const body = document.createElement("div");
+        body.className = ti === 0 ? "p-3" : "p-3 hidden";
+
+        task.subtasks.forEach((sub, si) => {
+          total++;
+          if (sub.done) completed++;
+
+          const disabled =
+            (si > 0 && !task.subtasks[si - 1].done) ||
+            (ti > 0 && !tasks[ti - 1].subtasks.every(s => s.done));
+
+          const div = document.createElement("div");
+          div.className = "flex items-center space-x-3 mb-2";
+          div.innerHTML = `
+            <input type="checkbox" ${sub.done ? "checked" : ""} ${disabled ? "disabled" : ""}
+              onchange="toggleSubtask(${task.id}, '${sub.id}')">
+            <span class="${sub.done ? "line-through text-gray-400" : ""}">${sub.text}</span>
+          `;
+          body.appendChild(div);
+        });
+
+        wrapper.appendChild(header);
+        wrapper.appendChild(body);
+        container.appendChild(wrapper);
+      });
+
+      const percent = Math.round((completed / total) * 100);
+      document.getElementById("progressBar").style.width = percent + "%";
+      document.getElementById("progressText").innerText = percent + "% Completed";
+    }
+
+    window.onload = renderTasks;
+
+    function showTab(tab) {
+      document.getElementById("overview").classList.add("hidden");
+      document.getElementById("developer").classList.add("hidden");
+      document.getElementById(tab).classList.remove("hidden");
+
+      document.getElementById("btn-overview").classList.remove("text-indigo-700","border-indigo-700","border-b-2");
+      document.getElementById("btn-overview").classList.add("text-gray-500");
+
+      document.getElementById("btn-developer").classList.remove("text-indigo-700","border-indigo-700","border-b-2");
+      document.getElementById("btn-developer").classList.add("text-gray-500");
+
+      document.getElementById("btn-"+tab).classList.remove("text-gray-500");
+      document.getElementById("btn-"+tab).classList.add("text-indigo-700","border-indigo-700","border-b-2");
+    }
+  </script>
+</head>
+<body class="bg-gray-100 text-gray-900">
+
+  <!-- Header -->
+  <header class="bg-indigo-700 text-white p-4 shadow-lg">
+    <h1 class="text-2xl font-bold">Service: GitHub Setup + Linting + CI/CD + Code Review</h1>
+  </header>
+
+  <!-- Tabs -->
+  <main class="container mx-auto px-6 py-6">
+    <div class="flex border-b border-gray-300 mb-6">
+      <button onclick="showTab('overview')" id="btn-overview" class="px-4 py-2 font-semibold text-indigo-700 border-b-2 border-indigo-700">Overview</button>
+      <button onclick="showTab('developer')" id="btn-developer" class="px-4 py-2 font-semibold text-gray-500 hover:text-indigo-700">Developer</button>
+    </div>
+
+    <!-- Overview -->
+    <section id="overview" class="space-y-6">
+      <h2 class="text-xl font-bold text-indigo-700">📘 Overview</h2>
+      <p>
+        This service ensures GitHub projects follow strict coding standards,
+        linting, CI/CD pipelines, code review rules, and reporting.
+      </p>
+
+      <div>
+        <h3 class="font-semibold text-lg mb-2">Project Structure</h3>
+        <pre class="bg-gray-900 text-green-300 p-4 rounded">
+github-ci-cd/
+ ├── .github/workflows/ci.yml   # CI/CD pipeline
+ ├── lint/                      # ESLint, Pylint configs
+ ├── tests/                     # Unit & integration tests
+ ├── docs/                      # Documentation
+ └── CODEOWNERS                 # Review rules
+        </pre>
+      </div>
+
+      <div>
+        <h3 class="font-semibold text-lg mb-2">Workflow</h3>
+        <ol class="list-decimal ml-6 space-y-1">
+          <li>Developer pushes code → PR required</li>
+          <li>Linting + build + tests run in CI</li>
+          <li>PR reviewed by peers</li>
+          <li>CodeQL & SonarQube check security & quality</li>
+          <li>Merge allowed only if all checks pass</li>
+        </ol>
+      </div>
+
+      <div>
+        <h3 class="font-semibold text-lg mb-2">Architecture Flow</h3>
+        <pre class="bg-gray-900 text-green-300 p-4 rounded">
+Developer ──▶ GitHub Repo ──▶ GitHub Actions CI/CD
+                │                 │
+                ▼                 ▼
+            Linter/Test      CodeQL / SonarQube
+                │                 │
+                └──────▶ Unified Dashboard
+        </pre>
+      </div>
+
+      <div>
+        <h3 class="font-semibold text-lg mb-2">Service Modules</h3>
+        <ul class="list-disc ml-6">
+          <li>GitHub Repo Setup & Branch Protection</li>
+          <li>Linting & Code Quality</li>
+          <li>CI/CD Pipeline (GitHub Actions)</li>
+          <li>Code Review Rules</li>
+          <li>OOP & Standards</li>
+          <li>Reporting & Dashboard</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- Developer -->
+    <section id="developer" class="hidden">
+      <h2 class="text-xl font-bold text-indigo-700 mb-4">🛠️ Developer Tasks</h2>
+
+      <div class="bg-gray-200 w-full rounded-full h-6 mb-4">
+        <div id="progressBar" class="bg-indigo-600 h-6 rounded-full" style="width:0%"></div>
+      </div>
+      <p id="progressText" class="text-sm mb-6">0% Completed</p>
+
+      <div id="taskList" class="space-y-2"></div>
+    </section>
+  </main>
+</body>
+</html>
