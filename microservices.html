@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Enterprise Monitoring & ERP System - Documentation</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body class="bg-gray-50 text-gray-800 font-sans">
+    <!-- Header -->
+    <header class="bg-blue-700 text-white shadow-lg">
+      <div
+        class="container mx-auto px-6 py-4 flex justify-between items-center"
+      >
+        <h1 class="text-2xl font-bold">Enterprise ERP + Monitoring Platform</h1>
+        <nav>
+          <a href="#overview" class="px-3 hover:underline">Overview</a>
+          <a href="#architecture" class="px-3 hover:underline">Architecture</a>
+          <a href="#technology" class="px-3 hover:underline">Technology</a>
+          <a href="#workflow" class="px-3 hover:underline">Workflow</a>
+          <a href="#services" class="px-3 hover:underline">Services</a>
+        </nav>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-6 py-10 space-y-16">
+      <!-- Overview -->
+      <section id="overview">
+        <h2 class="text-3xl font-bold text-blue-700 mb-4">
+          📘 Project Overview
+        </h2>
+        <p class="leading-relaxed">
+          This project is a
+          <strong>modular, enterprise-ready platform</strong> combining
+          <span class="font-semibold">ERP + HR + CMS</span>,
+          <span class="font-semibold">Project Management</span>,
+          <span class="font-semibold">Vacation & Attendance</span>,
+          <span class="font-semibold">Employee Monitoring</span> (Laptop &
+          Android),
+          <span class="font-semibold">Developer Code Review & Test</span>, and a
+          unified <span class="font-semibold">Dashboard</span>.
+        </p>
+        <p class="mt-2 leading-relaxed">
+          Each service is deployed independently (microservice style) to ensure
+          <span class="font-semibold">resilience</span> — if one goes down,
+          others continue running. A
+          <span class="font-semibold">central dashboard</span> aggregates data
+          for managers, HR, and developers.
+        </p>
+      </section>
+
+      <!-- Architecture -->
+      <section id="architecture">
+        <h2 class="text-3xl font-bold text-blue-700 mb-4">🏗️ Architecture</h2>
+        <ul class="list-disc ml-6 space-y-2">
+          <li>
+            <strong>ERP + HR + CMS:</strong> Employee data, payroll, HR, website
+            content.
+          </li>
+          <li>
+            <strong>Project Management:</strong> Projects, tasks, milestones,
+            Kanban/Gantt.
+          </li>
+          <li>
+            <strong>Vacation & Attendance:</strong> Leave approvals, daily
+            attendance.
+          </li>
+          <li>
+            <strong>Employee Monitoring:</strong> Laptop & Android usage
+            tracking.
+          </li>
+          <li>
+            <strong>Developer Code Review & Test:</strong> GitLab/Gitea, CI/CD
+            pipelines.
+          </li>
+          <li>
+            <strong>Unified Dashboard:</strong> Next.js frontend showing
+            integrated data.
+          </li>
+        </ul>
+        <div class="mt-6 bg-white shadow-md p-6 rounded-lg">
+          <h3 class="text-xl font-semibold mb-2">
+            Interaction Diagram (High-Level)
+          </h3>
+          <pre
+            class="bg-gray-900 text-green-300 text-sm p-4 rounded-md overflow-x-auto"
+          >
+Unified Dashboard (Next.js)
+        ▲
+ ┌─────┼─────────┬───────────┬─────────────┐
+ │     │         │           │             │
+ERP   Project  Vacation   Monitoring    Developer
+HR    Mgmt     & Attend   (Laptop+Mob)  (GitLab CE)
+          </pre>
+        </div>
+      </section>
+
+      <!-- Technology -->
+      <section id="technology">
+        <h2 class="text-3xl font-bold text-blue-700 mb-4">
+          ⚙️ Technology Stack
+        </h2>
+        <ul class="grid grid-cols-2 gap-4">
+          <li class="bg-white shadow p-4 rounded-lg">
+            Python (Frappe/ERPNext)
+          </li>
+          <li class="bg-white shadow p-4 rounded-lg">
+            PostgreSQL / TimescaleDB
+          </li>
+          <li class="bg-white shadow p-4 rounded-lg">
+            FastAPI / Node.js (APIs)
+          </li>
+          <li class="bg-white shadow p-4 rounded-lg">
+            Next.js + TailwindCSS (Dashboard)
+          </li>
+          <li class="bg-white shadow p-4 rounded-lg">Docker + Traefik/Nginx</li>
+          <li class="bg-white shadow p-4 rounded-lg">GitLab CE / Gitea</li>
+          <li class="bg-white shadow p-4 rounded-lg">
+            ActivityWatch (Laptop Monitoring)
+          </li>
+          <li class="bg-white shadow p-4 rounded-lg">Custom Android Agent</li>
+        </ul>
+      </section>
+
+      <!-- Workflow -->
+      <section id="workflow">
+        <h2 class="text-3xl font-bold text-blue-700 mb-4">
+          🛠️ Developer Workflow
+        </h2>
+        <ol class="list-decimal ml-6 space-y-2">
+          <li>Repository & environment setup (Docker, DB, API boilerplate)</li>
+          <li>Laptop Agent (ActivityWatch fork, app/browser tracking)</li>
+          <li>Android Agent (UsageStats API, background service)</li>
+          <li>Monitoring API (FastAPI/Node.js with secure endpoints)</li>
+          <li>Database schema & migrations (TimescaleDB)</li>
+          <li>Processing jobs (daily summary, app usage reports)</li>
+          <li>Dashboard API integration (employee, team reports)</li>
+          <li>Testing (unit, integration, load, Android performance)</li>
+          <li>Deployment (Docker images, CI/CD pipeline)</li>
+          <li>Documentation & Handover</li>
+        </ol>
+      </section>
+
+      <!-- Execution Checklist -->
+      <section id="checklist">
+        <h2 class="text-3xl font-bold text-blue-700 mb-4">
+          ✅ Execution Sequence (Dependencies)
+        </h2>
+        <div class="bg-gray-200 w-full rounded-full h-6 mb-4">
+          <div
+            id="progressBar"
+            class="bg-blue-600 h-6 rounded-full"
+            style="width: 0%"
+          ></div>
+        </div>
+        <p id="progressText" class="text-sm mb-6">0% Completed</p>
+        <div id="serviceChecklist" class="space-y-2"></div>
+      </section>
+
+      <!-- Services -->
+      <section id="services">
+        <h2 class="text-3xl font-bold text-blue-700 mb-4">📂 Services</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <a
+            href="github-ci-cd.html"
+            class="block bg-white p-6 rounded-lg shadow hover:shadow-lg"
+          >
+            <h3 class="text-xl font-semibold mb-2">1. Github CI/CD</h3>
+            <p>Setup workflows, linting, pipelines, and deployment.</p>
+          </a>
+
+          <a
+            href="service-erp.html"
+            class="block bg-white p-6 rounded-lg shadow hover:shadow-lg"
+          >
+            <h3 class="text-xl font-semibold mb-2">2. ERP + HR + CMS</h3>
+            <p>Core ERP modules, employee, payroll, website CMS.</p>
+          </a>
+
+          <a
+            href="service-developer.html"
+            class="block bg-white p-6 rounded-lg shadow hover:shadow-lg"
+          >
+            <h3 class="text-xl font-semibold mb-2">
+              3. Developer Code Review & Test
+            </h3>
+            <p>GitLab/Gitea repositories, code reviews, CI/CD tests.</p>
+          </a>
+
+          <a
+            href="service-project.html"
+            class="block bg-white p-6 rounded-lg shadow hover:shadow-lg"
+          >
+            <h3 class="text-xl font-semibold mb-2">4. Project Management</h3>
+            <p>Projects, tasks, milestones, Kanban and Gantt view.</p>
+          </a>
+
+          <a
+            href="service-attendance.html"
+            class="block bg-white p-6 rounded-lg shadow hover:shadow-lg"
+          >
+            <h3 class="text-xl font-semibold mb-2">5. Vacation & Attendance</h3>
+            <p>Leaves, shifts, attendance logs and approvals.</p>
+          </a>
+
+          <a
+            href="service-monitoring.html"
+            class="block bg-white p-6 rounded-lg shadow hover:shadow-lg"
+          >
+            <h3 class="text-xl font-semibold mb-2">6. Employee Monitoring</h3>
+            <p>Laptop & Android device monitoring, productivity logs.</p>
+          </a>
+
+          <a
+            href="service-dashboard.html"
+            class="block bg-white p-6 rounded-lg shadow hover:shadow-lg"
+          >
+            <h3 class="text-xl font-semibold mb-2">7. Unified Dashboard</h3>
+            <p>Centralized dashboard integrating all service APIs.</p>
+          </a>
+        </div>
+      </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-200 py-4 text-center text-sm text-gray-600">
+      © 2025 Enterprise ERP + Monitoring Platform | Documentation
+    </footer>
+    <script src="jsonbin.js"></script>
+    <script>
+      let checklist = [];
+
+      async function loadChecklist() {
+        try {
+          checklist = await window.jsonbin.jsonbinRead();
+          renderChecklist();
+        } catch (err) {
+          console.warn("⚠️ Load error, using defaults");
+          checklist = [
+            { id: 1, name: "Github CI/CD", done: false },
+            { id: 2, name: "ERP + HR + CMS", done: false },
+            { id: 3, name: "Developer Code Review & Test", done: false },
+            { id: 4, name: "Project Management", done: false },
+            { id: 5, name: "Vacation & Attendance", done: false },
+            { id: 6, name: "Employee Monitoring", done: false },
+            { id: 7, name: "Unified Dashboard", done: false },
+          ];
+          renderChecklist();
+        }
+      }
+
+      function renderChecklist() {
+        const container = document.getElementById("serviceChecklist");
+        container.innerHTML = "";
+        let completed = 0;
+
+        checklist.forEach((task, i) => {
+          if (task.done) completed++;
+          const disabled = i > 0 && !checklist[i - 1].done;
+
+          const div = document.createElement("div");
+          div.className =
+            "flex items-center space-x-3 p-2 bg-white rounded shadow mb-2";
+          div.innerHTML = `
+            <input type="checkbox" id="task${task.id}" ${
+            task.done ? "checked" : ""
+          } ${disabled ? "disabled" : ""}>
+            <label for="task${task.id}" class="${
+            task.done ? "line-through text-gray-400" : ""
+          }">
+            ${task.name}
+            </label>
+        `;
+          container.appendChild(div);
+
+          document
+            .getElementById(`task${task.id}`)
+            .addEventListener("change", async () => {
+              if (disabled) {
+                alert("⚠️ Complete previous task first!");
+                return;
+              }
+              task.done = !task.done;
+              await window.jsonbin.jsonbinWrite(checklist); // ✅ সরাসরি Bin এ save
+              renderChecklist();
+            });
+        });
+
+        const progress = Math.round((completed / checklist.length) * 100);
+        document.getElementById("progressBar").style.width = progress + "%";
+        document.getElementById("progressText").innerText =
+          progress + "% Completed";
+      }
+
+      loadChecklist();
+    </script>
+  </body>
+</html>
