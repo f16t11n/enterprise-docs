@@ -2,9 +2,11 @@ name: Simple CI (Static HTML)
 
 on:
   push:
-    branches: [ main ]
+    branches:
+      - main
   pull_request:
-    branches: [ main ]
+    branches:
+      - main
 
 jobs:
   validate:
@@ -15,6 +17,6 @@ jobs:
 
       - name: Validate HTML files exist
         run: |
-          echo "í³‚ Listing project files"
+          echo "Listing project files"
           ls -R
-          echo "âœ… Static HTML project ready!"
+          echo "Static HTML project ready!"
